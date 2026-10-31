@@ -6,7 +6,7 @@ Site one-page : HTML5 sémantique, Tailwind CSS v4, JavaScript ES6+ (sans framew
 - `index.html` – page unique (SEO, JSON-LD, un seul `<h1>`)
 - `src/input.css` → `css/styles.css` – `npm install && npm run build:css` pour recompiler Tailwind
 - `js/main.js`, `js/theme.js` – carrousels, master-detail, veille Dev.to, FormSubmit, Docs +
-- `public/docs/` – déposez ici vos PDF ; `manifest.json` est régénéré à chaque déploiement (`scripts/build-docs.mjs`)
+- `public/docs/` – déposez ici vos PDF, puis référencez-les dans `js/docs-config.js` (nom, description, catégorie et option de téléchargement). Les catégories sans document sont masquées. `manifest.json` est régénéré à chaque déploiement (`scripts/build-docs.mjs`).
 - `netlify.toml` (en-têtes de sécurité + CSP), `_redirects`, `robots.txt`, `sitemap.xml`
 
 ## À faire

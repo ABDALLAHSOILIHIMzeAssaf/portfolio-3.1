@@ -388,8 +388,8 @@
         <a class="hover:text-teal-text" href="#projets">Projets</a>
         <a class="hover:text-teal-text" href="#experiences">Expériences</a>
         <a class="hover:text-teal-text" href="#blog">Blog</a>
-        <button id="docs-btn" type="button" class="w-fit text-left text-lg hover:text-teal-text"
-          aria-haspopup="dialog">Docs +</button>
+        <button id="docs-btn" type="button" class="w-fit text-left text-lg hover:text-teal-text" aria-haspopup="dialog"
+          aria-controls="docs-panel" aria-expanded="false">Docs +</button>
       </nav>
       <div class="flex flex-col gap-2 text-lg">
         <a class="hover:text-teal-text" href="https://www.linkedin.com/in/mze-assaf/" target="_blank"
@@ -402,31 +402,42 @@
     </div>
   </footer>
 
-  <!-- Modale Docs + -->
-  <dialog id="docs-dialog"
-    class="m-auto w-[min(92vw,36rem)] rounded-[2rem] border border-line bg-[#14124a] p-0 text-white"
-    aria-labelledby="docs-title">
-    <div class="p-6 sm:p-8">
-      <div class="flex items-start justify-between gap-4">
-        <h2 id="docs-title" class="text-2xl font-bold">Documents</h2>
-        <button type="button" id="docs-close" class="grid h-10 w-10 place-items-center rounded-full hover:bg-white/10"
-          aria-label="Fermer">
-          <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2.2"
-            stroke-linecap="round" aria-hidden="true">
-            <path d="M6 6l12 12M18 6 6 18" />
-          </svg>
-        </button>
+  <!-- Docs+ flottant -->
+  <button id="docs-fab" type="button" class="docs-fab" aria-label="Ouvrir le widget Docs+" aria-haspopup="dialog"
+    aria-controls="docs-panel" aria-expanded="false">
+    <span class="docs-fab__icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+        stroke-linejoin="round" aria-hidden="true">
+        <path d="M7 3h7l5 5v13H7zM14 3v6h5M10 13h6m-6 4h6" />
+      </svg>
+    </span>
+    <span class="docs-fab__label">Docs +</span>
+  </button>
+
+  <aside id="docs-panel" class="docs-panel" role="dialog" aria-modal="false" aria-labelledby="docs-panel-title"
+    aria-describedby="docs-panel-description" hidden>
+    <div class="docs-panel__header">
+      <div>
+        <h2 id="docs-panel-title">Mon espace documentaire</h2>
+        <p id="docs-panel-description">Retrouvez mes documents et ressources</p>
       </div>
-      <p class="mt-1 text-sm text-[#c9c8f0]">CV, comptes-rendus de projets BTS et rapports de stage (PDF).</p>
-      <ul id="docs-list" class="mt-6 flex max-h-[50vh] flex-col gap-2 overflow-y-auto" aria-live="polite"></ul>
+      <button id="docs-panel-close" type="button" class="docs-panel__close" aria-label="Fermer le panneau">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2"
+          stroke-linecap="round">
+          <path d="M6 6l12 12M18 6 6 18" />
+        </svg>
+      </button>
     </div>
-  </dialog>
+
+    <div id="docs-panel-body" class="docs-panel__body" aria-live="polite"></div>
+  </aside>
 
   <!-- Toast -->
   <div id="toast"
     class="toast fixed bottom-6 left-1/2 z-[90] flex max-w-[92vw] items-center gap-3 rounded-2xl px-5 py-3 text-base font-semibold text-white shadow-2xl backdrop-blur-md"
     role="status" aria-live="polite" data-show="false"></div>
 
+  <script src="js/docs-config.js" defer></script>
   <script src="js/main.js" defer></script>
 </body>
 

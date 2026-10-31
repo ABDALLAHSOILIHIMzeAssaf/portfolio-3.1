@@ -322,32 +322,153 @@ const toast = (() => {
   });
 })();
 
-/* ---------- Docs + (modale) ----------
-   Dossier figé dans le code : jamais construit à partir d'une saisie utilisateur.
-   Le manifeste est généré au déploiement par scripts/build-docs.mjs (scan de /public/docs/). */
+/* ---------- Docs + (widget flottant global) ---------- */
 (() => {
-  const DOCS_DIR = '/public/docs/';                       // codé en dur (Hardcoded)
-  const MANIFEST = DOCS_DIR + 'manifest.json';
-  const dlg = $('#docs-dialog'), list = $('#docs-list');
-  const NAME_OK = /^[\p{L}\p{N} _().,'’+-]{1,120}\.pdf$/iu;   // uniquement .pdf, aucun séparateur de chemin
+  const button = document.getElementById('docs-fab');
+  const panel = document.getElementById('docs-panel');
+  const closeBtn = document.getElementById('docs-panel-close');
+  const body = document.getElementById('docs-panel-body');
+  const footerButton = document.getElementById('docs-btn');
 
-  const isSafe = (n) => typeof n === 'string' && NAME_OK.test(n) && !n.includes('..') && !/[\\/:]/.test(n);
-  const pretty = (n) => n.replace(/\.pdf$/i, '').replace(/[_]+/g, ' ');
+  if (!button || !panel || !body) return;
 
-  async function open() {
-    list.replaceChildren(h('li', { class: 'text-[#c9c8f0]', text: 'Chargement…' }));
-    dlg.showModal();
+  const triggers = [button, footerButton].filter(Boolean);
+  let activeTrigger = button;
+
+  const documentIcon = () => {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'currentColor');
+    svg.setAttribute('stroke-width', '1.8');
+    svg.setAttribute('stroke-linecap', 'round');
+    svg.setAttribute('stroke-linejoin', 'round');
+    svg.setAttribute('aria-hidden', 'true');
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', 'M7 3h7l5 5v13H7zM14 3v6h5M10 13h6m-6 4h6');
+    svg.append(path);
+    return svg;
+  };
+
+  const setOpen = (open, restoreFocus = false, trigger = button) => {
+    panel.hidden = !open;
+    triggers.forEach((element) => element.setAttribute('aria-expanded', String(open)));
+    button.classList.toggle('is-open', open);
+    if (open) {
+      activeTrigger = trigger;
+      button.setAttribute('aria-label', 'Fermer Docs +');
+      closeBtn?.focus({ preventScroll: true });
+    } else {
+      button.setAttribute('aria-label', 'Ouvrir Docs +');
+      if (restoreFocus && activeTrigger.isConnected) activeTrigger.focus({ preventScroll: true });
+    }
+  };
+
+  const createItem = (doc) => {
+    if (!doc || typeof doc.label !== 'string' || !doc.label.trim()) {
+      console.error('Docs+ : document ignoré, son nom est manquant.');
+      return null;
+    }
+    if (typeof doc.href !== 'string' || !doc.href.trim()) return null;
+
+    let url;
     try {
-      const r = await fetch(MANIFEST, { cache: 'no-cache', credentials: 'omit' });
-      if (!r.ok) throw new Error();
-      const files = (await r.json()).files;
-      const ok = (Array.isArray(files) ? files : []).filter(isSafe).sort((a, b) => a.localeCompare(b, 'fr', { numeric: true }));
-      list.replaceChildren(...(ok.length ? ok.map((n) => h('li', {},
-        h('a', { class: 'flex items-center gap-3 rounded-2xl border border-[rgba(129,104,255,.45)] px-4 py-3 hover:bg-[rgba(129,104,255,.3)]', href: DOCS_DIR + encodeURIComponent(n), target: '_blank', rel: 'noopener noreferrer' },
-          h('span', { 'aria-hidden': 'true', text: '📄' }), h('span', { text: pretty(n) })))) : [h('li', { text: 'Aucun document pour le moment.' })]));
-    } catch { list.replaceChildren(h('li', { text: 'Impossible de charger la liste des documents.' })); }
+      url = new URL(doc.href, document.baseURI);
+    } catch {
+      console.error(`Docs+ : URL invalide pour « ${doc.label} ».`);
+      return null;
+    }
+    if (url.protocol !== 'https:' && url.origin !== location.origin) {
+      console.error(`Docs+ : URL non autorisée pour « ${doc.label} ».`);
+      return null;
+    }
+
+    const wrapper = h('article', { class: 'docs-doc' });
+
+    const main = h('div', { class: 'docs-doc__main' },
+      h('span', { class: 'docs-doc__icon', 'aria-hidden': 'true' }, documentIcon()),
+      h('div', { class: 'docs-doc__text' },
+        h('span', { class: 'docs-doc__label', text: doc.label }),
+        doc.description ? h('span', { class: 'docs-doc__description', text: doc.description }) : null
+      )
+    );
+
+    const actions = h('div', { class: 'docs-doc__actions' },
+      h('a', {
+        class: 'docs-doc__action',
+        href: url.href,
+        target: '_blank',
+        rel: 'noopener noreferrer',
+      }, 'Consulter')
+    );
+
+    if (doc.download) {
+      actions.append(h('a', {
+        class: 'docs-doc__action docs-doc__download',
+        href: url.href,
+        download: true,
+        'aria-label': `Télécharger ${doc.label}`,
+        title: `Télécharger ${doc.label}`,
+      }, h('span', { 'aria-hidden': 'true', text: '↓' })));
+    }
+
+    wrapper.append(main, actions);
+    return wrapper;
+  };
+
+  const render = () => {
+    const config = window.DOCS_CONFIG;
+    if (!config || !Array.isArray(config.sections)) {
+      console.error('Docs+ : configuration des documents manquante ou invalide.');
+      return;
+    }
+
+    const sections = config.sections.map((section) => {
+      if (!section || typeof section.title !== 'string' || !Array.isArray(section.items)) {
+        console.error('Docs+ : section ignorée, sa configuration est invalide.');
+        return null;
+      }
+
+      const items = section.items.map(createItem).filter(Boolean);
+      if (!items.length) return null;
+
+      const sectionWrap = h('section', { class: 'docs-panel__section' },
+        h('h3', { class: 'docs-panel__section-title', text: section.title })
+      );
+      const list = h('div', { class: 'docs-panel__list' });
+      list.append(...items);
+      sectionWrap.append(list);
+      return sectionWrap;
+    }).filter(Boolean);
+
+    const container = h('div', { class: 'docs-panel__sections' });
+    container.append(...sections);
+    body.replaceChildren(container);
+  };
+
+  button.addEventListener('click', () => setOpen(panel.hidden, true, button));
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => setOpen(false, true));
   }
-  $('#docs-btn').addEventListener('click', open);
-  $('#docs-close').addEventListener('click', () => dlg.close());
-  dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+
+  if (footerButton) {
+    footerButton.addEventListener('click', () => setOpen(panel.hidden, true, footerButton));
+  }
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !panel.hidden) {
+      setOpen(false, true);
+    }
+  });
+
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    if (target instanceof Node && !panel.hidden && !panel.contains(target)
+      && !triggers.some((element) => element.contains(target))) {
+      setOpen(false);
+    }
+  });
+
+  render();
 })();
