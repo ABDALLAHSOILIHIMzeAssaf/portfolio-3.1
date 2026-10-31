@@ -1,0 +1,16 @@
+{
+  "name": "mze-dev-portfolio",
+  "version": "4.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:css": "tailwindcss -i src/input.css -o css/styles.css --minify",
+    "build:docs": "node scripts/build-docs.mjs",
+    "build": "npm run build:docs",
+    "dev": "npx serve ."
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.0",
+    "tailwindcss": "^4.1.0"
+  }
+}

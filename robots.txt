@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mze-assaf.netlify.app/sitemap.xml
