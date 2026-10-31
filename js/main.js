@@ -60,9 +60,12 @@ const safeUrl = (u) => { try { const x = new URL(u); return x.protocol === 'http
 /* ---------- Carrousel profils + logos (hero) ---------- */
 (() => {
   const PROFILES = [
-    { role: 'Développeur Full-Stack', techs: [['Python', 'python'], ['JavaScript', 'javascript'], ['PHP', 'php']] },
-    { role: 'Passionné d’IA', techs: [['Python', 'python'], ['Pandas', 'pandas'], ['scikit-learn', 'scikitlearn']] },
-    { role: 'Spécialiste Cybersécurité', techs: [['Kali Linux', 'kalilinux'], ['Wireshark', 'wireshark'], ['Python', 'python']] },
+    { techs: [['HTML5', 'html5'], ['CSS3', 'css3'], ['JavaScript', 'javascript']] },
+    { techs: [['Python', 'python'], ['PHP', 'php'], ['Kotlin', 'kotlin']] },
+    { techs: [['React', 'react'], ['Node.js', 'nodejs'], ['Next.js', 'nextjs']] },
+    { techs: [['Three.js', 'threejs'], ['Phaser', 'phaser']] },
+    { techs: [['MySQL', 'mysql'], ['PostgreSQL', 'postgresql'], ['Supabase', 'supabase']] },
+    { techs: [['Git', 'git'], ['GitHub', 'github'], ['Linux', 'linux']] },
   ];
   const track = $('#tech-track'), role = $('#profile-role'), dots = $('#profile-dots');
   let i = 0, timer;
@@ -93,33 +96,51 @@ const safeUrl = (u) => { try { const x = new URL(u); return x.protocol === 'http
 
 /* ---------- Expériences (Master-Detail) ---------- */
 const EXPERIENCES = [
-  { tab: 'Co-Fondateur & Data Scientist', org: 'Rushe.', date: 'Févr. 2026 – Aujourd’hui · 9 mois',
+  {
+    tab: 'Co-Fondateur & Data Scientist', org: 'Rushe.', date: 'Févr. 2026 – Aujourd’hui · 9 mois',
     text: 'Création d’une solution permettant d’identifier les logements avec de fortes déperditions thermiques sur un territoire donné, d’établir une priorisation des rénovations énergétiques et de contribuer à la lutte contre la précarité énergétique.',
-    badges: ['Intelligence Artificielle (IA)', 'Analyse de données', 'Travail d’équipe'] },
-  { tab: 'Cordées de la réussite | Cyber Gendarme (cadet)', org: 'Lycée Léonard de Vinci de Melun / AMGN', date: 'Sept. 2025 – Aujourd’hui · 1 an 2 mois',
+    badges: ['Intelligence Artificielle (IA)', 'Analyse de données', 'Travail d’équipe']
+  },
+  {
+    tab: 'Cordées de la réussite | Cyber Gendarme (cadet)', org: 'Lycée Léonard de Vinci de Melun / AMGN', date: 'Sept. 2025 – Aujourd’hui · 1 an 2 mois',
     text: 'Connaissances juridiques, respect du cadre légal, participation à des cérémonies officielles comme le ravivage de la flamme. Activités avec des parrains de l’école de la gendarmerie et découverte des structures militaires. Participation à des ateliers et simulations d’enquêtes (ex : identification de comportements problématiques en ligne) avec respect strict des procédures et de l’éthique.',
-    badges: ['Cybersécurité', 'Cadre légal', 'Éthique'] },
-  { tab: 'Ingénieur IA (Stage)', org: 'My Super Academia', date: 'Mai 2026 – Juil. 2026 · 3 mois',
+    badges: ['Cybersécurité', 'Cadre légal', 'Éthique']
+  },
+  {
+    tab: 'Ingénieur IA (Stage)', org: 'My Super Academia', date: 'Mai 2026 – Juil. 2026 · 3 mois',
     text: 'Apprentissage des fondamentaux du développement web. Conception et développement de composants front-end. Conception et développement d’agents IA. Élaboration de tests d’agents IA (système multi-agents Hermes). Automatisation de workflows. Initiation au déploiement d’applications web. Veille technologique sur l’intelligence artificielle agentique.',
-    badges: ['React 19', 'Supabase', 'Three.js', 'Phaser', 'Agents IA', 'n8n', 'QA & Tests'] },
-  { tab: 'Data Scientist', org: 'Evolukid – programme KESK’IA', date: 'Févr. 2026 – Juil. 2026 · 6 mois',
+    badges: ['React 19', 'Supabase', 'Three.js', 'Phaser', 'Agents IA', 'n8n', 'QA & Tests']
+  },
+  {
+    tab: 'Data Scientist', org: 'Evolukid – programme KESK’IA', date: 'Févr. 2026 – Juil. 2026 · 6 mois',
     text: 'Sélectionné parmi une dizaine de candidats pour représenter les Yvelines (78) et les Hauts-de-Seine (92) dans le programme KESK’IA saison 4, en partenariat avec le groupe Crédit Agricole. Développement d’une solution intelligente (IA) Rushe, capable d’identifier les logements à forte déperdition thermique sur un territoire donné.',
-    badges: ['Intelligence Artificielle (IA)', 'Data Science', 'Python'] },
-  { tab: 'Nuit du Code | Concours national en ligne', org: 'Lycée Rosa Parks', date: 'Janv. 2024 – Juin 2024 · 6 mois',
+    badges: ['Intelligence Artificielle (IA)', 'Data Science', 'Python']
+  },
+  {
+    tab: 'Nuit du Code | Concours national en ligne', org: 'Lycée Rosa Parks', date: 'Janv. 2024 – Juin 2024 · 6 mois',
     text: 'Développement d’un projet en équipe en HTML, CSS et JavaScript dans un temps limité (tenisbymze.netlify.app).',
-    badges: ['JavaScript', 'Collaboration', 'Algorithmique'] },
-  { tab: 'Passe ton hack d’abord | Concours national', org: 'Concours en ligne – Montgeron', date: 'Déc. 2023 – Janv. 2024 · 2 mois',
+    badges: ['JavaScript', 'Collaboration', 'Algorithmique']
+  },
+  {
+    tab: 'Passe ton hack d’abord | Concours national', org: 'Concours en ligne – Montgeron', date: 'Déc. 2023 – Janv. 2024 · 2 mois',
     text: '7ᵉ place sur +5 000 participants, tous niveaux d’études confondus. Accès à un compte bancaire sans identifiants en modifiant le code source du site. Utilisation d’OSINT pour trouver la localisation d’un lieu de tournage à partir d’un clip vidéo. Décryptage d’un message historique de guerre d’un soldat, chiffré selon une méthode ancienne.',
-    badges: ['OSINT', 'Cryptographie', 'Reverse Engineering', 'Web Hacking'] },
-  { tab: 'Hack mon Lycée | Concours national', org: 'Concours national', date: '2024',
+    badges: ['OSINT', 'Cryptographie', 'Reverse Engineering', 'Web Hacking']
+  },
+  {
+    tab: 'Hack mon Lycée | Concours national', org: 'Concours national', date: '2024',
     text: '190ᵉ place sur 744 participants. Résolution de défis techniques, développement d’idées innovantes sous contrainte de temps et de sécurité.',
-    badges: ['Sécurité', 'CTF', 'Résolution de problèmes'] },
-  { tab: 'Développeur informatique (Stage)', org: 'DIGITAL', date: 'Janv. 2022 · 1 mois',
+    badges: ['Sécurité', 'CTF', 'Résolution de problèmes']
+  },
+  {
+    tab: 'Développeur informatique (Stage)', org: 'DIGITAL', date: 'Janv. 2022 · 1 mois',
     text: 'Initiation aux langages informatiques (Pascal) et à l’algorithmique (boucles, conditions, fonctions).',
-    badges: ['Algorithmique', 'Pascal'] },
-  { tab: 'Certification – Les bases de l’IA 2026', org: 'The Canva Team – Canva Design School', date: 'Émis le 21 octobre 2026',
+    badges: ['Algorithmique', 'Pascal']
+  },
+  {
+    tab: 'Certification – Les bases de l’IA 2026', org: 'The Canva Team – Canva Design School', date: 'Émis le 21 octobre 2026',
     text: 'Certificat de complétion officielle : Les bases de l’IA 2026. ID d’accréditation : cc3df3.',
-    badges: ['Intelligence Artificielle (IA)', 'Certification'], cert: true },
+    badges: ['Intelligence Artificielle (IA)', 'Certification'], cert: true
+  },
 ];
 
 (() => {
