@@ -5,15 +5,21 @@ window.DOCS_CONFIG = {
       title: 'Documents professionnels',
       items: [
         {
-          label: 'CV – Alternance 2026',
-          description: 'Curriculum Vitae pour les candidatures en alternance.',
-          href: '/public/docs/CV_Mze_Abdallah_Alternance_Rentree_2026.pdf',
+          label: 'CV – Développeur Web',
+          description: 'Curriculum Vitae orienté développement web.',
+          href: '/public/docs/CV_Mze_ABDALLAH_Developpeur_Web.pdf',
           download: true
         },
         {
-          label: 'CV – version standard',
-          description: 'Version générale pour les opportunités de stage et de projet.',
-          href: '/public/docs/CV_Mze_Assaf.pdf',
+          label: 'CV – Développeur IA',
+          description: 'Curriculum Vitae orienté intelligence artificielle.',
+          href: '/public/docs/CV_Mze_ABDALLAH_Developpeur_IA.pdf',
+          download: true
+        },
+        {
+          label: 'CV – Développeur Backend',
+          description: 'Curriculum Vitae orienté développement backend.',
+          href: '/public/docs/CV_Mze_ABDALLAH_Developpeur_Backend.pdf',
           download: true
         }
       ]
